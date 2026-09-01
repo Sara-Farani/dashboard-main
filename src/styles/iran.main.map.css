@@ -1,0 +1,684 @@
+/* =========================================================
+   IranMainMap
+   ========================================================= */
+
+.map-stage {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  min-width: 0;
+  min-height: 420px;
+  padding: 20px;
+
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(17, 68, 98, 0.55),
+      transparent 62%
+    ),
+    #07111f;
+
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 1px 12px rgb(15 23 42 / 18%);
+}
+
+/*
+  نقشه در حالت کوچک با پس‌زمینه روشن.
+*/
+.iran-map-card.is-compact .map-stage {
+  min-height: 420px;
+  height: 100%;
+
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(62, 224, 255, 0.12),
+      transparent 58%
+    ),
+    radial-gradient(
+      circle at 85% 90%,
+      rgba(245, 193, 90, 0.1),
+      transparent 48%
+    ),
+    #ffffff;
+
+  border: 0;
+  border-radius: 18px;
+  box-shadow: none;
+}
+
+.map-aurora,
+.map-grid,
+.map-sweep {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.map-aurora {
+  background:
+    radial-gradient(
+      500px 240px at 30% 20%,
+      rgba(62, 224, 255, 0.12),
+      transparent 70%
+    ),
+    radial-gradient(
+      420px 260px at 72% 78%,
+      rgba(245, 193, 90, 0.1),
+      transparent 70%
+    );
+
+  animation: drift 10s ease-in-out infinite alternate;
+}
+
+.map-grid {
+  background-image:
+    linear-gradient(rgba(90, 140, 190, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 140, 190, 0.07) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 82%);
+}
+
+.iran-map-card.is-compact .map-grid {
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.07) 1px, transparent 1px);
+}
+
+.map-sweep {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0 78%,
+    rgba(62, 224, 255, 0.08) 88%,
+    transparent 100%
+  );
+
+  mix-blend-mode: screen;
+  animation: spin 14s linear infinite;
+}
+
+.iran-map-card.is-compact .map-sweep {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0 78%,
+    rgba(62, 224, 255, 0.14) 88%,
+    transparent 100%
+  );
+}
+
+.iran-svg {
+  position: relative;
+  z-index: 1;
+
+  display: block;
+
+  width: 100%;
+  height: 100%;
+  min-height: 380px;
+  overflow: visible;
+}
+
+/* =========================================================
+   Province paths
+   ========================================================= */
+
+.province {
+  cursor: pointer;
+
+  fill: #102033;
+  stroke: rgba(130, 190, 230, 0.28);
+  stroke-width: 1.1;
+
+  transition:
+    fill 0.35s ease,
+    stroke 0.35s ease,
+    filter 0.35s ease;
+}
+
+.province.heat-1 {
+  fill: #123047;
+}
+
+.province.heat-2 {
+  fill: #153a52;
+}
+
+.province.heat-3 {
+  fill: #18445c;
+}
+
+.province.heat-4 {
+  fill: #1b5168;
+}
+
+.province.is-live {
+  fill: #155a6e;
+  stroke: rgba(62, 224, 255, 0.75);
+}
+
+.province.is-featured {
+  fill: #7a5a1c;
+  stroke: #f5c15a;
+  stroke-width: 1.8;
+}
+
+.province.is-incoming {
+  animation: flash 0.9s ease;
+}
+
+.province.is-hovered {
+  fill: #1d6d82;
+  stroke: #9ef6ff;
+}
+
+.province-glow {
+  fill: none;
+  stroke-width: 8;
+  opacity: 0.55;
+}
+
+.province-glow.is-featured {
+  stroke: #f5c15a;
+}
+
+.province-glow.is-live {
+  stroke: #3ee0ff;
+}
+
+/* =========================================================
+   Request markers
+   ========================================================= */
+
+.pulse-mark .core {
+  fill: #dff9ff;
+  filter: drop-shadow(0 0 6px #3ee0ff);
+}
+
+.pulse-mark.featured .core {
+  fill: #fff4cc;
+  filter: drop-shadow(0 0 8px #f5c15a);
+}
+
+.pulse-mark .ring {
+  fill: none;
+  stroke: #3ee0ff;
+  stroke-width: 1.4;
+  transform-origin: center;
+  animation: pulse 2s ease-out infinite;
+}
+
+.pulse-mark.featured .ring {
+  stroke: #f5c15a;
+}
+
+.pulse-mark .ring-b {
+  animation-delay: 0.7s;
+}
+
+.pulse-mark.incoming .ring {
+  animation-duration: 1s;
+}
+
+.map-tag {
+  fill: rgba(6, 12, 20, 0.82);
+  stroke-width: 1;
+}
+
+.map-tag.gold {
+  stroke: rgba(245, 193, 90, 0.7);
+}
+
+.map-tag.cyan {
+  stroke: rgba(62, 224, 255, 0.65);
+}
+
+.map-tag-text {
+  fill: #f3f7ff;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   Tooltip and legend
+   ========================================================= */
+
+.map-tip {
+  position: absolute;
+  z-index: 10;
+
+  display: grid;
+  gap: 2px;
+
+  min-width: 150px;
+  padding: 8px 10px;
+
+  color: var(--muted);
+  pointer-events: none;
+
+  background: rgba(8, 14, 24, 0.92);
+  border: 1px solid rgba(62, 224, 255, 0.28);
+  border-radius: 10px;
+
+  transform: translate(-50%, calc(-100% - 14px));
+}
+
+.iran-map-card.is-compact .map-tip {
+  color: #334155;
+
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(14, 116, 144, 0.36);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+}
+
+.map-tip strong {
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.iran-map-card.is-compact .map-tip strong {
+  color: #0f172a;
+}
+
+.map-tip span,
+.map-tip em {
+  color: var(--muted);
+  font-size: 11px;
+  font-style: normal;
+}
+
+.iran-map-card.is-compact .map-tip span,
+.iran-map-card.is-compact .map-tip em {
+  color: #475569;
+}
+
+.map-legend {
+  position: absolute;
+  z-index: 3;
+  bottom: 12px;
+  left: 14px;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.iran-map-card.is-compact .map-legend {
+  color: #334155;
+}
+
+.map-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dot.gold {
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+}
+
+.dot.cyan {
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+.dot.heat {
+  background: #1b5168;
+  border: 1px solid #3ee0ff;
+}
+
+/* =========================================================
+   Sea  (SeaLayer + iran.seas)
+   کلاس‌های اصلی:
+   - .sea-layer / .sea-group
+   - .sea-shape.sea-caspian | .sea-persian-gulf | .sea-oman
+   - .sea-wave.sea-caspian-wave | .sea-persian-gulf-wave | .sea-oman-sea-wave
+   - .sea-label.sea-caspian-label | .sea-persian-gulf-label | .sea-oman-label
+   ========================================================= */
+
+.sea-layer {
+  pointer-events: none;
+}
+
+.sea-group {
+  pointer-events: none;
+}
+
+.sea-shape,
+.sea-area {
+  opacity: 0.9;
+}
+
+.sea-caspian,
+.sea-persian-gulf,
+.sea-oman {
+  filter: drop-shadow(0 0 10px rgba(80, 180, 230, 0.12));
+}
+
+.sea-wave {
+  fill: none;
+  stroke: url(#sea-wave-grad);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.8;
+  animation: sea-wave-pulse 4s ease-in-out infinite;
+}
+
+/* delay پیش‌فرض؛ SeaLayer با style animationDelay هم override می‌کند */
+.sea-caspian-wave {
+  animation-delay: 0s;
+}
+
+.sea-persian-gulf-wave {
+  animation-delay: 0.8s;
+}
+
+/* id دریا = oman-sea → کلاس موج = sea-oman-sea-wave */
+.sea-oman-wave,
+.sea-oman-sea-wave {
+  animation-delay: 1.4s;
+}
+
+.sea-label {
+  fill: rgba(121, 220, 255, 0.48);
+  font-family: Vazirmatn, IRANSans, Tahoma, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  direction: rtl;
+  unicode-bidi: plaintext;
+  letter-spacing: 0;
+  pointer-events: none;
+  user-select: none;
+
+  paint-order: stroke fill;
+  stroke: rgba(4, 18, 30, 0.22);
+  stroke-width: 2px;
+  stroke-linejoin: round;
+}
+
+.sea-caspian-label,
+.caspian-label {
+  font-size: 16px;
+}
+
+.sea-persian-gulf-label,
+.persian-gulf-label {
+  fill: rgba(110, 216, 255, 0.54);
+}
+
+.sea-oman-label,
+.oman-sea-label {
+  font-size: 13px;
+  fill: rgba(110, 216, 255, 0.38);
+}
+
+/* حالت فشرده / پس‌زمینه روشن */
+.iran-map-card.is-compact .sea-shape,
+.iran-map-card.is-compact .sea-area {
+  opacity: 0.8;
+}
+
+.iran-map-card.is-compact .sea-label {
+  fill: rgba(14, 116, 144, 0.42);
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 2.2px;
+}
+
+.iran-map-card.is-compact .sea-persian-gulf-label,
+.iran-map-card.is-compact .persian-gulf-label {
+  fill: rgba(8, 110, 140, 0.48);
+}
+
+.iran-map-card.is-compact .sea-oman-label,
+.iran-map-card.is-compact .oman-sea-label {
+  fill: rgba(8, 110, 140, 0.34);
+}
+
+/* =========================================================
+   Province labels  (ProvinceLabels)
+   ========================================================= */
+
+/*
+  برچسب‌ها نباید مانع hover و click روی path استان‌ها شوند.
+*/
+.province-label-layer {
+  pointer-events: none;
+}
+
+.province-label {
+  fill: rgba(224, 245, 255, 0.42);
+  font-family: Vazirmatn, IRANSans, Tahoma, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  direction: rtl;
+  unicode-bidi: plaintext;
+  letter-spacing: 0;
+  pointer-events: none;
+  user-select: none;
+
+  paint-order: stroke fill;
+  stroke: rgba(5, 20, 34, 0.34);
+  stroke-width: 2.5px;
+  stroke-linejoin: round;
+
+  transition:
+    fill 180ms ease,
+    opacity 180ms ease,
+    font-size 180ms ease,
+    stroke 180ms ease;
+}
+
+/* نام‌های دوخطی */
+.province-label.is-double {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* استان‌های باریک با چرخش */
+.province-label.is-rotated {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* هایلایت نام — فقط در حالت عادی (غیر compact) */
+.province-label.is-hovered {
+  fill: rgba(255, 255, 255, 1);
+  font-weight: 700;
+  /* stroke: rgba(247, 242, 242, 0.1); */
+}
+
+.province-label.is-featured {
+  fill: rgba(255, 222, 143, 0.95);
+  font-weight: 700;
+  /* stroke: rgba(40, 24, 4, 0.42); */
+}
+
+/*
+  کارت فشرده با پس‌زمینه سفید:
+  لیبل‌ها یکدست و بدون هایلایت hover / featured.
+*/
+.iran-map-card.is-compact .province-label {
+  fill: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+  /* stroke: rgba(255, 255, 255, 0.62); */
+  /* stroke-width: 2.4px; */
+}
+
+.iran-map-card.is-compact .province-label.is-double,
+.iran-map-card.is-compact .province-label.is-rotated {
+  fill: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+}
+
+/*
+  در compact، هایلایت نوشته نام استان‌ها کاملاً برداشته می‌شود
+  (حتی اگر کلاس is-hovered / is-featured از JS بیاید).
+*/
+.iran-map-card.is-compact .province-label.is-hovered,
+.iran-map-card.is-compact .province-label.is-featured {
+  fill: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+  /* stroke: rgba(255, 255, 255, 0.62);
+  stroke-width: 2.4px; */
+}
+
+.iran-map-card.is-compact .province-label.is-double.is-hovered,
+.iran-map-card.is-compact .province-label.is-double.is-featured,
+.iran-map-card.is-compact .province-label.is-rotated.is-hovered,
+.iran-map-card.is-compact .province-label.is-rotated.is-featured {
+  fill: rgba(15, 23, 42, 0.38);
+  font-weight: 600;
+}
+
+/* =========================================================
+   Map animations
+   ========================================================= */
+
+@keyframes pulse {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.35);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+@keyframes flash {
+  0% {
+    fill: #dff9ff;
+  }
+
+  100% {
+    fill: #155a6e;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes sea-wave-pulse {
+  0%,
+  100% {
+    opacity: 0.32;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
+/* =========================================================
+   Map responsive
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .province-label {
+    font-size: 9px;
+    stroke-width: 2px;
+  }
+
+  .province-label.is-double,
+  .province-label.is-rotated {
+    font-size: 8.5px;
+  }
+
+  .sea-label {
+    font-size: 12px;
+  }
+
+  .sea-caspian-label,
+  .caspian-label {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 720px) {
+  .map-stage {
+    min-height: 360px;
+    padding: 12px;
+  }
+
+  .iran-svg {
+    min-height: 330px;
+  }
+
+  .iran-map-card.is-compact,
+  .iran-map-card.is-compact .ops-grid,
+  .iran-map-card.is-compact .map-stage {
+    min-height: 330px;
+  }
+
+  .map-legend {
+    right: 12px;
+    left: 12px;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  /*
+    در صفحه‌های کوچک، برای جلوگیری از شلوغی،
+    متن استان‌ها مخفی می‌شود؛ marker و tooltip فعال می‌مانند.
+  */
+  .province-label {
+    display: none;
+  }
+
+  .sea-label {
+    font-size: 10px;
+  }
+
+  .sea-caspian-label,
+  .caspian-label {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-stage {
+    min-height: 300px;
+  }
+
+  .iran-svg {
+    min-height: 270px;
+  }
+
+  .iran-map-card.is-compact,
+  .iran-map-card.is-compact .ops-grid,
+  .iran-map-card.is-compact .map-stage {
+    min-height: 300px;
+  }
+}

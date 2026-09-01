@@ -1,0 +1,307 @@
+/* =========================================================
+   Iran Seas
+   آب هم‌رنگ پس‌زمینه + خطوط کشورهای اطراف هم‌رنگ مرز ایران
+   ========================================================= */
+
+   .sea-layer {
+    /*
+      رنگ آب transparent است؛
+      بنابراین هر رنگی که پس‌زمینه SVG یا کارت نقشه داشته باشد،
+      دقیقاً همان رنگ در ناحیه دریا دیده می‌شود.
+  
+      اگر روزی خواستید دریا یک رنگ مشخص داشته باشد، مقدار زیر را
+      مثلاً به #f4f1eb یا var(--map-background) تغییر دهید.
+    */
+    --sea-background-fill: transparent;
+  
+    /*
+      رنگ و ضخامت مرزها.
+  
+      اگر در فایل اصلی نقشه متغیرهای دیگری برای مرز ایران دارید،
+      این دو متغیر را با همان متغیرها جایگزین کنید.
+  
+      نمونه:
+      --sea-border-color: var(--province-border-color);
+      --sea-border-width: var(--province-border-width);
+    */
+    --sea-border-color:
+      var(
+        --iran-border-color,
+        var(
+          --map-border-color,
+          rgba(78, 86, 92, 0.72)
+        )
+      );
+  
+    --sea-border-width:
+      var(
+        --iran-border-width,
+        var(--map-border-width, 0.8px)
+      );
+  
+    --sea-foreign-land-fill:
+      var(--map-foreign-land, #d8d2c7);
+  
+    pointer-events: none;
+    user-select: none;
+    isolation: isolate;
+  }
+  
+  .sea-group,
+  .sea-land-patch-layer,
+  .foreign-coastline-layer {
+    pointer-events: none;
+  }
+  
+  /* =========================================================
+     آب دریاها
+     ========================================================= */
+  
+  .sea-water,
+  .sea-caspian-water,
+  .sea-persian-gulf-water,
+  .sea-oman-water {
+    /*
+      transparent یعنی رنگ ناحیه دریا دقیقاً همان رنگ پس‌زمینه است.
+    */
+    fill: var(--sea-background-fill);
+    fill-opacity: 1;
+  
+    /*
+      بسیار مهم:
+      stroke نباید وجود داشته باشد.
+  
+      waterBoundary یک path بسته است؛ stroke آن باعث ایجاد خط اضافه
+      در لبه خارجی آب، خصوصاً بالای دریای خزر، می‌شد.
+    */
+    stroke: none !important;
+    stroke-width: 0 !important;
+  
+    filter: none !important;
+    pointer-events: none;
+  }
+  
+  /* =========================================================
+     لایه‌های جلوه آب، موج و درخشش کاملاً غیرفعال
+     ========================================================= */
+  
+  .sea-water-glow,
+  .sea-water-depth,
+  .sea-ripple-overlay,
+  .sea-shimmer,
+  .sea-outer-wave,
+  .sea-outer-foam,
+  .sea-coast-foam,
+  .sea-wave-layer,
+  .sea-wave,
+  .sea-wave-a,
+  .sea-wave-b,
+  .sea-wave-c,
+  .sea-water-underlap,
+  .sea-water-seal-layer,
+  .sea-water-seal,
+  .sea-underlay,
+  .sea-overlay,
+  .sea-expand,
+  .sea-mask-extra,
+  .sea-water-extra,
+  .sea-water-top,
+  .sea-water-bottom,
+  .sea-water-wide,
+  .sea-water-soft,
+  .sea-water-blur {
+    display: none !important;
+    opacity: 0 !important;
+    fill: none !important;
+    stroke: none !important;
+    filter: none !important;
+    animation: none !important;
+    pointer-events: none !important;
+  }
+  
+  /* =========================================================
+     خشکی‌ها و جزیره‌های کشورهای اطراف
+     ========================================================= */
+  
+  .sea-land-patch {
+    fill: var(--sea-foreign-land-fill);
+  
+    /*
+      مرز خشکی‌های مجاور هم‌رنگ مرز ایران.
+    */
+    stroke: var(--sea-border-color);
+    stroke-width: var(--sea-border-width);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  
+    pointer-events: none;
+  }
+  
+  /* =========================================================
+     خطوط ساحلی / مرز کشورهای اطراف دریا
+     ========================================================= */
+  
+  .foreign-coastline {
+    pointer-events: none;
+  }
+  
+  .foreign-coastline-line {
+    fill: none;
+  
+    /*
+      استفاده از همان رنگ و ضخامت مرز ایران.
+    */
+    stroke: var(--sea-border-color);
+    stroke-width: var(--sea-border-width);
+  
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-opacity: 1;
+  
+    pointer-events: none;
+  
+    /*
+      مانند خط مرز اصلی نقشه در زمان زوم، ضخامت ظاهری ثابتی دارد.
+      اگر مرز ایران شما non-scaling-stroke نیست، این خط را حذف کنید.
+    */
+    vector-effect: non-scaling-stroke;
+  }
+  
+  /* =========================================================
+     مسیر ساحل ایران در این لایه پنهان است
+     چون خود نقشه ایران، مرز ایران را رسم می‌کند.
+     ========================================================= */
+  
+  .iran-sea-coastline {
+    display: none !important;
+  }
+  
+  /* =========================================================
+     برچسب دریاها
+     ========================================================= */
+  
+  .sea-label {
+    fill: rgba(70, 78, 84, 0.9);
+    stroke: rgba(255, 255, 255, 0.85);
+    stroke-width: 2px;
+    paint-order: stroke fill;
+  
+    font-family: Vazirmatn, IRANSans, Tahoma, sans-serif;
+    font-size: calc(15px / var(--map-zoom, 1));
+    font-weight: 700;
+  
+    text-anchor: middle;
+    dominant-baseline: middle;
+  
+    direction: rtl;
+    unicode-bidi: plaintext;
+    letter-spacing: 0;
+  
+    pointer-events: none;
+    user-select: none;
+  }
+  
+  .sea-caspian-label,
+  .caspian-label {
+    font-size: calc(15px / var(--map-zoom, 1));
+  }
+  
+  .sea-persian-gulf-label,
+  .persian-gulf-label {
+    font-size: calc(16px / var(--map-zoom, 1));
+  }
+  
+  .sea-oman-label,
+  .oman-sea-label {
+    font-size: calc(14px / var(--map-zoom, 1));
+  }
+  
+  /* =========================================================
+     تم تیره
+     ========================================================= */
+  
+  .iran-map-card.is-dark .sea-layer,
+  .iran-map-card.is-expanded.is-dark .sea-layer {
+    /*
+      transparent باقی می‌ماند تا همچنان رنگ خود پس‌زمینه دیده شود.
+    */
+    --sea-background-fill: transparent;
+  
+    --sea-foreign-land-fill:
+      var(--map-foreign-land, #223449);
+  
+    --sea-border-color:
+      var(
+        --iran-border-color,
+        var(
+          --map-border-color,
+          rgba(165, 190, 208, 0.78)
+        )
+      );
+  }
+  
+  .iran-map-card.is-dark .sea-label {
+    fill: rgba(220, 235, 244, 0.92);
+    stroke: rgba(20, 30, 38, 0.72);
+  }
+  
+  /* =========================================================
+     حالت بزرگنمایی
+     ========================================================= */
+  
+  .iran-map-card.is-expanded .sea-land-patch,
+  .iran-map-card.is-zoomed .sea-land-patch {
+    stroke-width: var(--sea-border-width);
+  }
+  
+  .iran-map-card.is-expanded .sea-label,
+  .map-modal .sea-label {
+    font-size: calc(17px / var(--map-zoom, 1));
+  }
+  
+  .iran-map-card.is-expanded .sea-persian-gulf-label,
+  .map-modal .sea-persian-gulf-label {
+    font-size: calc(18px / var(--map-zoom, 1));
+  }
+  
+  .iran-map-card.is-expanded .sea-oman-label,
+  .map-modal .sea-oman-label {
+    font-size: calc(15px / var(--map-zoom, 1));
+  }
+  
+  /* =========================================================
+     Responsive
+     ========================================================= */
+  
+  @media (max-width: 900px) {
+    .sea-label {
+      font-size: calc(13px / var(--map-zoom, 1));
+    }
+  
+    .sea-persian-gulf-label,
+    .persian-gulf-label {
+      font-size: calc(14px / var(--map-zoom, 1));
+    }
+  
+    .sea-oman-label,
+    .oman-sea-label {
+      font-size: calc(12px / var(--map-zoom, 1));
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .sea-label {
+      font-size: calc(11px / var(--map-zoom, 1));
+      stroke-width: 1.6px;
+    }
+  
+    .sea-persian-gulf-label,
+    .persian-gulf-label {
+      font-size: calc(12px / var(--map-zoom, 1));
+    }
+  
+    .sea-oman-label,
+    .oman-sea-label {
+      font-size: calc(10px / var(--map-zoom, 1));
+    }
+  }

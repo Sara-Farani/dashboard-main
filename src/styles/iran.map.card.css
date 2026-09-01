@@ -1,0 +1,992 @@
+.ops-shell {
+  --bg: #05080f;
+  --bg-2: #08111c;
+  --panel: rgba(10, 18, 32, 0.72);
+  --line: rgba(120, 170, 220, 0.16);
+  --cyan: #3ee0ff;
+  --cyan-2: #7af0ff;
+  --gold: #f5c15a;
+  --gold-2: #ffe29a;
+  --mint: #3dffb0;
+  --violet: #b08cff;
+  --text: #e8eef8;
+  --muted: #dce1e7;
+  --danger: #ff6b8a;
+  --sans: 'Vazirmatn', system-ui, sans-serif;
+  --mono: 'Share Tech Mono', ui-monospace, monospace;
+
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 14px;
+  padding: 16px 18px 18px;
+  overflow: hidden;
+
+  color: var(--text);
+  font-family: var(--sans);
+
+  background:
+    radial-gradient(
+      circle at 8% 0%,
+      rgba(62, 224, 255, 0.08),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 95% 100%,
+      rgba(245, 193, 90, 0.08),
+      transparent 35%
+    ),
+    var(--bg);
+}
+
+/* =========================================================
+   IranMapCard: حالت کوچک و بزرگ
+   ========================================================= */
+
+.iran-map-card {
+  width: 100%;
+  min-width: 0;
+
+  transition:
+    min-height 260ms ease,
+    padding 260ms ease,
+    border-radius 260ms ease;
+}
+
+/* =========================================================
+   حالت عادی: فقط نقشه با پس‌زمینه سفید
+   ========================================================= */
+
+.iran-map-card.is-compact {
+  --text: #0f172a;
+  --muted: #475569;
+  --line: rgba(15, 23, 42, 0.14);
+
+  display: block;
+  min-height: 420px;
+  padding: 0;
+  overflow: hidden;
+
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+}
+
+/*
+  حالت بزرگ:
+  HeaderMap، StatsBar، RequestFeed، FeaturedRequest و Map نمایش داده می‌شوند.
+*/
+.iran-map-card.is-expanded {
+  min-height: 100svh;
+  padding: 16px 18px 18px;
+  border-radius: 0;
+}
+
+.iran-map-card.is-expanded .hud-header,
+.iran-map-card.is-expanded .stats-bar,
+.iran-map-card.is-expanded .ops-grid {
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================================
+   Fullscreen واقعی مرورگر
+   ========================================================= */
+
+.iran-map-card:fullscreen,
+.iran-map-card:-webkit-full-screen {
+  display: grid;
+
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-height: none;
+
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 14px;
+
+  padding: 16px 18px 18px;
+  margin: 0;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 8% 0%,
+      rgba(62, 224, 255, 0.1),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 95% 100%,
+      rgba(245, 193, 90, 0.1),
+      transparent 35%
+    ),
+    var(--bg);
+
+  border: 0;
+  border-radius: 0;
+}
+
+.iran-map-card:fullscreen::backdrop,
+.iran-map-card:-webkit-full-screen::backdrop {
+  background: #05080f;
+}
+
+.iran-map-card:fullscreen .ops-grid-expanded,
+.iran-map-card:-webkit-full-screen .ops-grid-expanded {
+  min-height: 0;
+  height: 100%;
+}
+
+.iran-map-card:fullscreen .map-stage,
+.iran-map-card:-webkit-full-screen .map-stage {
+  min-height: 0;
+  height: 100%;
+}
+
+.iran-map-card:fullscreen .iran-svg,
+.iran-map-card:-webkit-full-screen .iran-svg {
+  min-height: 0;
+  height: 100%;
+}
+
+/* =========================================================
+   Background
+   ========================================================= */
+
+.bg-noise,
+.bg-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-noise {
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.bg-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 45%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+}
+
+/* =========================================================
+   دکمه Fullscreen
+   ========================================================= */
+
+.map-fullscreen-button {
+  position: absolute;
+  z-index: 100;
+  top: 16px;
+  right: 16px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 38px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+
+  color: #ffffff;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  background: rgba(7, 17, 31, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(10px);
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.map-fullscreen-button:hover {
+  background: rgba(18, 42, 68, 0.96);
+  border-color: rgba(93, 218, 255, 0.72);
+  transform: translateY(-1px);
+}
+
+.map-fullscreen-button:focus-visible {
+  outline: 2px solid #5ddaff;
+  outline-offset: 3px;
+}
+
+/* دکمه در fullscreen در گوشه بالا و سمت راست باقی می‌ماند */
+.iran-map-card.is-expanded .map-fullscreen-button,
+.iran-map-card:fullscreen .map-fullscreen-button,
+.iran-map-card:-webkit-full-screen .map-fullscreen-button {
+  top: 24px;
+  right: 24px;
+}
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/*
+  در حالت تمام‌صفحه:
+  دکمه خروج سمت راست قرار دارد و عنوان پس از دکمه نمایش داده می‌شود.
+  فضای سمت راست برای جلوگیری از قرار گرفتن عنوان زیر دکمه است.
+*/
+.iran-map-card.is-expanded .hud-header,
+.iran-map-card:fullscreen .hud-header,
+.iran-map-card:-webkit-full-screen .hud-header {
+  padding-top: 0;
+  padding-right: 178px;
+  padding-left: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.brand-mark {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+
+  width: 44px;
+  height: 44px;
+  padding: 9px;
+
+  background: linear-gradient(
+    160deg,
+    rgba(62, 224, 255, 0.16),
+    rgba(245, 193, 90, 0.08)
+  );
+  border: 1px solid rgba(62, 224, 255, 0.35);
+  border-radius: 12px;
+  box-shadow: 0 0 24px rgba(62, 224, 255, 0.18);
+}
+
+.brand-mark span {
+  background: var(--cyan);
+  border-radius: 1px;
+  animation: eq 1.6s ease-in-out infinite;
+}
+
+.brand-mark span:nth-child(2) {
+  background: var(--gold);
+  animation-delay: 0.2s;
+}
+
+.brand-mark span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.brand-kicker {
+  margin: 0;
+  color: var(--cyan);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+}
+
+.brand h1 {
+  margin: 2px 0 0;
+  overflow: hidden;
+
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.live-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 6px 12px;
+
+  font-size: 13px;
+
+  background: rgba(61, 255, 176, 0.08);
+  border: 1px solid rgba(61, 255, 176, 0.28);
+  border-radius: 999px;
+}
+
+.live-chip i {
+  width: 8px;
+  height: 8px;
+
+  background: var(--mint);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--mint);
+  animation: blink 1.2s ease-in-out infinite;
+}
+
+.live-chip i.is-paused {
+  background: var(--gold);
+  box-shadow: 0 0 10px var(--gold);
+  animation: none;
+}
+
+.clock-block {
+  text-align: left;
+}
+
+.clock-block strong {
+  display: block;
+  color: var(--gold-2);
+  font-family: var(--mono);
+  font-size: 22px;
+  letter-spacing: 0.04em;
+}
+
+.clock-block small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.ghost-btn {
+  padding: 8px 12px;
+
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13px;
+
+  cursor: pointer;
+
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+
+  transition: 0.2s ease;
+}
+
+.ghost-btn:hover {
+  background: rgba(62, 224, 255, 0.08);
+  border-color: rgba(62, 224, 255, 0.45);
+}
+
+.ghost-btn.accent {
+  color: var(--gold-2);
+  border-color: rgba(245, 193, 90, 0.4);
+}
+
+/* =========================================================
+   StatsBar
+   ========================================================= */
+
+.stats-bar {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stat-card {
+  position: relative;
+  overflow: hidden;
+
+  padding: 12px 16px 14px;
+
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  backdrop-filter: blur(16px);
+}
+
+.stat-card::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  inset-inline-start: 0;
+
+  width: 3px;
+
+  content: '';
+}
+
+.tone-cyan::after {
+  background: var(--cyan);
+}
+
+.tone-gold::after {
+  background: var(--gold);
+}
+
+.tone-mint::after {
+  background: var(--mint);
+}
+
+.tone-violet::after {
+  background: var(--violet);
+}
+
+.stat-label {
+  display: block;
+  margin-bottom: 4px;
+
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+/* =========================================================
+   Grid اصلی
+   ========================================================= */
+
+.ops-grid {
+  position: relative;
+  z-index: 2;
+
+  min-height: 0;
+}
+
+/* حالت fullscreen و نمای کامل */
+.ops-grid-expanded {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr) 340px;
+  gap: 14px;
+
+  min-height: 0;
+}
+
+/* حالت عادی: فقط نقشه */
+.ops-grid-compact {
+  display: block;
+
+  width: 100%;
+  min-height: 420px;
+  height: 100%;
+}
+
+.iran-map-card.is-compact .ops-grid {
+  min-height: 420px;
+}
+
+/* =========================================================
+   Panels
+   ========================================================= */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+
+  min-height: 0;
+
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(18px);
+}
+
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 14px 16px 10px;
+}
+
+.panel-head h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.panel-head span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* =========================================================
+   RequestFeed
+   ========================================================= */
+
+.feed-list {
+  display: grid;
+  gap: 8px;
+
+  min-height: 0;
+  padding: 0 10px 12px;
+  margin: 0;
+
+  overflow: auto;
+  list-style: none;
+}
+
+.feed-item {
+  padding: 10px 12px;
+
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid transparent;
+  border-radius: 12px;
+
+  animation: rise 0.45s ease both;
+}
+
+.feed-item.incoming {
+  border-color: rgba(62, 224, 255, 0.45);
+  box-shadow: 0 0 18px rgba(62, 224, 255, 0.12);
+}
+
+.feed-item.processing {
+  border-color: rgba(245, 193, 90, 0.28);
+}
+
+.feed-item.is-featured {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 193, 90, 0.12),
+    rgba(245, 193, 90, 0.03)
+  );
+}
+
+.feed-top,
+.feed-meta,
+.feed-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.feed-top b {
+  font-size: 14px;
+}
+
+.feed-top time,
+.feed-meta span,
+.feed-foot small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.feed-purpose {
+  margin: 4px 0 6px;
+  color: #c9d6e8;
+  font-size: 12px;
+}
+
+.feed-meta strong {
+  color: var(--cyan-2);
+  font-size: 13px;
+}
+
+.feed-foot code {
+  color: #9fb4cc;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.status-pill {
+  padding: 2px 8px;
+
+  font-size: 11px;
+  font-style: normal;
+
+  border: 1px solid transparent;
+  border-radius: 999px;
+}
+
+.status-pill.incoming {
+  color: var(--cyan);
+  background: rgba(62, 224, 255, 0.1);
+  border-color: rgba(62, 224, 255, 0.25);
+}
+
+.status-pill.processing {
+  color: var(--gold-2);
+  background: rgba(245, 193, 90, 0.12);
+  border-color: rgba(245, 193, 90, 0.28);
+}
+
+.status-pill.completed {
+  color: var(--mint);
+  background: rgba(61, 255, 176, 0.08);
+  border-color: rgba(61, 255, 176, 0.2);
+}
+
+/* =========================================================
+   FeaturedRequest
+   ========================================================= */
+
+.featured-panel {
+  padding-bottom: 14px;
+}
+
+.featured-panel.is-empty {
+  align-items: stretch;
+}
+
+.empty-copy {
+  padding: 20px 16px;
+  color: var(--muted);
+}
+
+.featured-hero {
+  margin: 0 16px 14px;
+  padding: 16px;
+
+  background:
+    radial-gradient(
+      circle at 90% 0%,
+      rgba(245, 193, 90, 0.18),
+      transparent 40%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(245, 193, 90, 0.08),
+      rgba(255, 255, 255, 0.02)
+    );
+
+  border: 1px solid rgba(245, 193, 90, 0.22);
+  border-radius: 16px;
+
+  animation: rise 0.5s ease;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.featured-hero h3 {
+  margin: 4px 0 6px;
+  font-size: 34px;
+  line-height: 1.15;
+}
+
+.featured-purpose {
+  margin: 0;
+  color: #d5deeb;
+  font-size: 13px;
+}
+
+.featured-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.featured-amount strong {
+  color: var(--gold-2);
+  font-size: 28px;
+}
+
+.featured-amount span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.progress-block {
+  padding: 0 16px 12px;
+}
+
+.progress-track {
+  height: 7px;
+  overflow: hidden;
+
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+}
+
+.progress-fill {
+  height: 100%;
+
+  background: linear-gradient(90deg, var(--gold), #fff1b8);
+  border-radius: inherit;
+  box-shadow: 0 0 12px rgba(245, 193, 90, 0.55);
+
+  transition: width 0.12s linear;
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+
+  padding: 0 16px;
+  margin: 0;
+}
+
+.featured-grid div {
+  padding: 10px;
+
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+}
+
+.featured-grid dt {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.featured-grid dd {
+  margin: 3px 0 0;
+  font-size: 13px;
+}
+
+.concurrent {
+  margin: 14px 16px 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.concurrent h4 {
+  margin: 0 0 8px;
+  color: var(--cyan);
+  font-size: 12px;
+}
+
+.concurrent ul {
+  display: grid;
+  gap: 6px;
+
+  padding: 0;
+  margin: 0;
+
+  list-style: none;
+}
+
+.concurrent li {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 7px 9px;
+
+  font-size: 13px;
+
+  background: rgba(62, 224, 255, 0.06);
+  border-radius: 10px;
+}
+
+/* =========================================================
+   پیام خطای Fullscreen
+   ========================================================= */
+
+.fullscreen-error {
+  position: absolute;
+  z-index: 110;
+  top: 70px;
+  right: 16px;
+
+  max-width: min(360px, calc(100% - 32px));
+  padding: 10px 12px;
+
+  color: #ffe6eb;
+  font-size: 12px;
+  line-height: 1.8;
+
+  background: rgba(104, 18, 40, 0.92);
+  border: 1px solid rgba(255, 107, 138, 0.65);
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+}
+
+/* =========================================================
+   Card animations
+   ========================================================= */
+
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.45);
+  }
+
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* =========================================================
+   Card responsive
+   ========================================================= */
+
+@media (max-width: 1180px) {
+  .iran-map-card.is-expanded {
+    min-height: auto;
+  }
+
+  .ops-grid-expanded {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(420px, 520px) auto auto;
+  }
+
+  .ops-grid-expanded .map-stage {
+    grid-row: 1;
+  }
+
+  .ops-grid-expanded .feed-panel {
+    order: 2;
+    max-height: 420px;
+  }
+
+  .ops-grid-expanded .featured-panel {
+    order: 3;
+  }
+
+  .stats-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .iran-map-card:fullscreen,
+  .iran-map-card:-webkit-full-screen {
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .iran-map-card.is-expanded,
+  .iran-map-card:fullscreen,
+  .iran-map-card:-webkit-full-screen {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .hud-header,
+  .header-meta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /*
+    دکمه در راست قرار می‌گیرد و Header با فضای سمت راست،
+    پس از دکمه نمایش داده می‌شود؛ نه زیر آن.
+  */
+  .iran-map-card.is-expanded .hud-header,
+  .iran-map-card:fullscreen .hud-header,
+  .iran-map-card:-webkit-full-screen .hud-header {
+    padding-top: 0;
+    padding-right: 54px;
+    padding-left: 0;
+  }
+
+  .clock-block {
+    text-align: right;
+  }
+
+  .brand h1 {
+    font-size: 18px;
+  }
+
+  .header-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .map-fullscreen-button,
+  .iran-map-card.is-expanded .map-fullscreen-button,
+  .iran-map-card:fullscreen .map-fullscreen-button,
+  .iran-map-card:-webkit-full-screen .map-fullscreen-button {
+    top: 12px;
+    right: 12px;
+  }
+
+  .fullscreen-error {
+    top: 60px;
+    right: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-fullscreen-button span {
+    display: none;
+  }
+
+  .map-fullscreen-button {
+    width: 40px;
+    min-width: 40px;
+    padding: 8px;
+  }
+
+  .stats-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header-actions {
+    grid-template-columns: 1fr;
+  }
+}
