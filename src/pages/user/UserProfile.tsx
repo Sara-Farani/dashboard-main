@@ -79,7 +79,7 @@ export default function UserProfile() {
         {tab === 'personal' && (
           <Card className="p-6">
             <div className="mb-6 flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-500 text-xl font-bold text-white shadow-lg shadow-primary-500/25">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-mellat-400 to-mellat-600 text-xl font-bold text-white shadow-lg shadow-primary-500/25">
                 {user?.fullName?.[0] || 'م'}
               </div>
               <div>

@@ -1,0 +1,21 @@
+کامپوننت‌های جدید ایجاد شده:
+
+src/components/auth/LoginBackground.tsx - افکت‌های پس‌زمینه
+src/components/auth/BrandPanel.tsx - پنل برند بانک ملت
+src/components/auth/LoginFormCard.tsx - کارت فرم ورود
+src/components/auth/LoginInput.tsx - ورودی فرم با آیکون
+src/components/auth/LoginSubmitButton.tsx - دکمه ارسال با افکت درخشش
+src/components/auth/PasswordToggle.tsx - دکمه نمایش/مخفی رمز
+
+توکن‌های تم اضافه شده در index.css:
+
+رنگ‌های mellat-* (50-900) برای برند بانک ملت
+رنگ‌های login-* (50-950) برای پالت خنثی صفحه ورود
+
+صفحه LoginPage بازنویسی شد:
+
+استفاده از کامپوننت‌های جداگانه
+استفاده از توکن‌های تم به جای مقادیر هاردکد شده
+کد تمیزتر و قابل نگهداری‌تر
+
+تم در کل صفحات و ساختار پروژه اعمال شده و سازگار با Tailwind v4 است.

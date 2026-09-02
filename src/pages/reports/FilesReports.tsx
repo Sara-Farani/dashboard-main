@@ -150,7 +150,7 @@ export default function TransactionReports() {
         <motion.div variants={staggerItem}>
           <StatChip
             icon={Zap}
-            color="bg-indigo-500 shadow-indigo-500/30"
+            color="bg-mellat-500 shadow-mellat-500/30"
             label="بیشترین فایل در دقیقه"
             value={formatFaNumber(stats.maxPerMinute)}
           />
@@ -220,7 +220,7 @@ export default function TransactionReports() {
           <motion.div variants={slideUp}>
             <Card className="p-5">
               <h3 className="mb-4 flex items-center gap-2 text-sm font-bold text-surface-700">
-                <TrendingUp size={16} className="text-indigo-500" />
+                <TrendingUp size={16} className="text-mellat-500" />
                 روند فایل‌ها
               </h3>
               <ResponsiveContainer width="100%" height={300}>

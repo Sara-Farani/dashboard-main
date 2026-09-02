@@ -186,9 +186,9 @@ export default function GeneralSettings() {
         {/* کارت راهنما و وضعیت تنظیمات */}
         <motion.div variants={staggerItem}>
           <Card className="overflow-hidden p-0">
-            <div className="flex flex-col gap-4 bg-gradient-to-l from-primary-50 to-white p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-4 bg-gradient-to-l from-mellat-50 via-white to-white p-5 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-600 text-white shadow-lg shadow-primary-500/20">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-b from-mellat-400 via-mellat-500 to-mellat-600 text-white shadow-lg shadow-mellat-500/30">
                   <Settings2 className="h-5 w-5" />
                 </div>
 
@@ -225,7 +225,7 @@ export default function GeneralSettings() {
         <motion.div variants={staggerItem}>
           <Card className="p-0">
             <div className="flex items-center gap-3 border-b border-surface-100 px-5 py-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-mellat-50 text-mellat-600">
                 <MonitorCog className="h-5 w-5" />
               </div>
 
@@ -287,7 +287,7 @@ export default function GeneralSettings() {
         <motion.div variants={staggerItem}>
           <Card className="p-0">
             <div className="flex items-center gap-3 border-b border-surface-100 px-5 py-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-mellat-50 text-mellat-600">
                 <Bell className="h-5 w-5" />
               </div>
 

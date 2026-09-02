@@ -8,16 +8,17 @@
   --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
   --font-sans-fa: "Vazirmatn", "Segoe UI", Tahoma, sans-serif;
 
-  --color-primary-50: #eef2ff;
-  --color-primary-100: #e0e7ff;
-  --color-primary-200: #c7d2fe;
-  --color-primary-300: #a5b4fc;
-  --color-primary-400: #818cf8;
-  --color-primary-500: #6366f1;
-  --color-primary-600: #4f46e5;
-  --color-primary-700: #4338ca;
-  --color-primary-800: #3730a3;
-  --color-primary-900: #312e81;
+  /* Brand primary — Bank Mellat red */
+  --color-primary-50: #fef2f2;
+  --color-primary-100: #fee2e2;
+  --color-primary-200: #fecaca;
+  --color-primary-300: #fca5a5;
+  --color-primary-400: #f87171;
+  --color-primary-500: #ed1c24;
+  --color-primary-600: #c4141b;
+  --color-primary-700: #9b1016;
+  --color-primary-800: #7f0d12;
+  --color-primary-900: #6b0b0f;
 
   --color-surface-50: #f8fafc;
   --color-surface-100: #f1f5f9;
@@ -40,6 +41,31 @@
 
   --color-warning-400: #fbbf24;
   --color-warning-500: #f59e0b;
+
+  /* Mellat brand colors */
+  --color-mellat-50: #fef2f2;
+  --color-mellat-100: #fee2e2;
+  --color-mellat-200: #fecaca;
+  --color-mellat-300: #fca5a5;
+  --color-mellat-400: #f87171;
+  --color-mellat-500: #ed1c24;
+  --color-mellat-600: #c4141b;
+  --color-mellat-700: #9b1016;
+  --color-mellat-800: #7f0d12;
+  --color-mellat-900: #6b0b0f;
+
+  /* Neutral palette for login */
+  --color-login-50: #f8f9fa;
+  --color-login-100: #f0f1f3;
+  --color-login-200: #d9dde3;
+  --color-login-300: #c5cad3;
+  --color-login-400: #9aa1ac;
+  --color-login-500: #8e96a3;
+  --color-login-600: #626975;
+  --color-login-700: #4a5058;
+  --color-login-800: #353a43;
+  --color-login-900: #17181c;
+  --color-login-950: #111216;
 
   --animate-pulse-slow: pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

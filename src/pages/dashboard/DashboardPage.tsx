@@ -130,7 +130,7 @@ export default function Dashboard() {
         />
         <StatCard
           icon={Wallet}
-          color="bg-indigo-500 shadow-indigo-500/30"
+          color="bg-mellat-500 shadow-mellat-500/30"
           label="تراکنش‌های امروز"
           value={String(stats.todayTransactions)}
         />
@@ -164,8 +164,8 @@ export default function Dashboard() {
                 <AreaChart data={miniData} margin={{ top: 4, right: 4, bottom: 0, left: 4 }}>
                   <defs>
                     <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#6366f1" stopOpacity={0.35} />
-                      <stop offset="100%" stopColor="#6366f1" stopOpacity={0.02} />
+                      <stop offset="0%" stopColor="#ED1C24" stopOpacity={0.35} />
+                      <stop offset="100%" stopColor="#ED1C24" stopOpacity={0.02} />
                     </linearGradient>
                   </defs>
                   <XAxis
@@ -188,7 +188,7 @@ export default function Dashboard() {
                   <Area
                     type="monotone"
                     dataKey="count"
-                    stroke="#6366f1"
+                    stroke="#ED1C24"
                     strokeWidth={2}
                     fill="url(#g1)"
                     isAnimationActive={true}

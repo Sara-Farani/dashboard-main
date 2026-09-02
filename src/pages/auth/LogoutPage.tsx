@@ -45,14 +45,14 @@ export default function LogoutPage() {
   }, []);
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-100 p-4">
+    <main className="flex min-h-screen items-center justify-center bg-[linear-gradient(160deg,#B7BDC6_0%,#9AA1AC_30%,#5B6270_65%,#2E323A_100%)] p-4">
       <section className="w-full max-w-md rounded-xl bg-white p-6 text-right shadow-md">
-        <h1 className="mb-3 text-xl font-bold text-slate-800">
+        <h1 className="mb-3 text-xl font-bold text-white">
           خروج از حساب کاربری
         </h1>
 
         {isLoading && (
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-white/70">
             در حال خروج از حساب کاربری...
           </p>
         )}

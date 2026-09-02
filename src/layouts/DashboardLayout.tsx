@@ -3,6 +3,7 @@ import { Navigate, Outlet, useNavigate } from 'react-router-dom'
 
 import Sidebar from './Sidebar'
 import Header from './Header'
+import AppBackground from '../components/layout/AppBackground'
 import { useAuthStore } from '../store/authStore'
 
 const DashboardLayout = () => {
@@ -35,7 +36,7 @@ const DashboardLayout = () => {
     return (
       <div
         dir="rtl"
-        className="flex min-h-screen items-center justify-center bg-slate-50 text-sm text-slate-600"
+        className="flex min-h-screen items-center justify-center bg-[linear-gradient(160deg,#B7BDC6_0%,#9AA1AC_30%,#5B6270_65%,#2E323A_100%)] text-sm text-white/80"
       >
         در حال بررسی اطلاعات کاربر...
       </div>
@@ -71,8 +72,10 @@ const DashboardLayout = () => {
   return (
     <div
       dir="rtl"
-      className="flex min-h-screen flex-col overflow-x-hidden bg-slate-50"
+      className="relative flex min-h-screen flex-col overflow-x-hidden"
     >
+      <AppBackground />
+
       {/* Header همیشه تمام عرض صفحه است */}
       <Header />
 
@@ -92,7 +95,7 @@ const DashboardLayout = () => {
 
       {/* Footer نیز در دسکتاپ کنار Sidebar قرار می‌گیرد */}
       <footer
-        className={`border-t border-slate-200 bg-white px-5 py-4 text-center text-xs text-slate-500 transition-[margin-right] duration-300 ease-in-out ${contentRightMarginClass}`}
+        className={`border-t border-white/25 bg-[#1E2128]/85 px-5 py-4 text-center text-xs text-white/55 backdrop-blur-xl transition-[margin-right] duration-300 ease-in-out ${contentRightMarginClass}`}
       >
         تمامی حقوق محفوظ است.
       </footer>

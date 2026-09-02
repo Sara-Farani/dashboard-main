@@ -10,10 +10,12 @@ type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost'
 type ButtonSize = 'sm' | 'md' | 'lg'
 
 const variants: Record<ButtonVariant, string> = {
-  primary: 'bg-primary-600 text-white hover:bg-primary-700 shadow-sm shadow-primary-600/30',
-  secondary: 'bg-surface-100 text-surface-700 hover:bg-surface-200 border border-surface-200',
+  primary:
+    'bg-gradient-to-b from-mellat-400 via-mellat-500 to-mellat-600 text-white hover:from-mellat-500 hover:to-mellat-700 shadow-md shadow-mellat-500/40',
+  secondary:
+    'bg-white/85 text-surface-700 hover:bg-white border border-surface-200 backdrop-blur',
   danger: 'bg-danger-500 text-white hover:bg-danger-600 shadow-sm shadow-danger-500/30',
-  ghost: 'text-surface-600 hover:bg-surface-100',
+  ghost: 'text-surface-600 hover:bg-white/70',
 }
 
 const sizes: Record<ButtonSize, string> = {
@@ -50,7 +52,7 @@ export default function Button({
       transition={{ type: 'spring', stiffness: 400, damping: 20 }}
       disabled={disabled || loading}
       className={[
-        'inline-flex items-center justify-center gap-2 font-medium transition-colors duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500',
+        'inline-flex items-center justify-center gap-2 font-medium transition-colors duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mellat-500',
         variants[variant],
         sizes[size],
         full && 'w-full',

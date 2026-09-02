@@ -36,13 +36,18 @@
     animation: skeleton-shimmer 1.6s linear infinite;
   }
 
-  /* Card base */
+  /* Card base — premium glass with Mellat top accent */
   .card {
-    @apply rounded-2xl border border-surface-200 bg-white shadow-sm;
+    @apply relative rounded-2xl border border-white/40 bg-white/85 shadow-[0_18px_50px_-20px_rgba(15,17,22,0.35)] backdrop-blur-xl;
   }
 
-  /* Input base */
+  .card::before {
+    content: '';
+    @apply pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-l from-transparent via-mellat-400/70 to-transparent;
+  }
+
+  /* Input base — premium with Mellat focus ring */
   .input {
-    @apply w-full rounded-xl border border-surface-300 bg-white px-4 py-2.5 text-sm text-surface-800 outline-none transition-all duration-200 placeholder:text-surface-400 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/15;
+    @apply w-full rounded-xl border border-surface-200 bg-white/90 px-4 py-2.5 text-sm text-surface-800 outline-none transition-all duration-200 placeholder:text-surface-400 focus:border-mellat-500 focus:bg-white focus:ring-4 focus:ring-mellat-500/15;
   }
 }

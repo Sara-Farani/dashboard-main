@@ -43,7 +43,10 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 flex h-16 items-center border-b border-surface-200/70 bg-white/90 px-3 backdrop-blur-xl sm:px-5 lg:px-8 sm:pr-3 lg:pr-3">
+      <header className="fixed inset-x-0 top-0 z-50 flex h-16 items-center border-b border-white/25 bg-[#1E2128]/85 px-3 shadow-[0_10px_40px_-16px_rgba(10,11,14,0.6)] backdrop-blur-xl sm:px-5 lg:px-8 sm:pr-3 lg:pr-3">
+        {/* خط قرمز ملت زیر هدر */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-l from-transparent via-mellat-500 to-transparent" />
+
         <motion.div
           variants={fadeIn}
           initial="hidden"
@@ -55,15 +58,15 @@ export default function Header() {
             <img
               src={mellatLogo}
               alt="لوگوی بانک ملت"
-              className="h-10 w-10 shrink-0 self-center object-contain"
+              className="h-10 w-10 shrink-0 self-center rounded-xl bg-white object-contain p-1 shadow-[0_6px_20px_-8px_rgba(237,28,36,0.6)]"
             />
 
             <div>
-              <h2 className="text-sm font-bold text-surface-800">
+              <h2 className="text-sm font-bold text-white">
                 داشبورد مدیریت پردازش های گروهی
               </h2>
 
-              <p className="hidden text-xs text-surface-400 sm:block">
+              <p className="hidden text-xs text-white/50 sm:block">
                 مدیریت فایل‌ها
               </p>
             </div>
@@ -73,19 +76,19 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <Dropdown
               align="end"
-              triggerClassName="cursor-pointer rounded-xl outline-none focus:ring-2 focus:ring-primary-400"
+              triggerClassName="cursor-pointer rounded-xl outline-none focus:ring-2 focus:ring-mellat-400"
               trigger={
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-indigo-500 text-xs font-bold text-white shadow-md shadow-primary-500/30">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-mellat-400 to-mellat-700 text-xs font-bold text-white shadow-md shadow-mellat-500/40 ring-1 ring-white/20">
                     <UserRound className="h-5 w-5" />
                   </div>
 
                   <div className="hidden text-right sm:block">
-                    <p className="text-sm font-medium text-surface-700">
+                    <p className="text-sm font-medium text-white">
                       {fullName}
                     </p>
 
-                    <p className="text-xs text-surface-400">
+                    <p className="text-xs text-white/50">
                       {user?.username || 'کاربر سامانه'}
                     </p>
                   </div>

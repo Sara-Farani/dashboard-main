@@ -27,7 +27,7 @@ const ROLES: Role[] = [
 
 const COLORS = [
   'from-primary-500 to-primary-600',
-  'from-indigo-500 to-indigo-600',
+  'from-mellat-500 to-mellat-600',
   'from-success-500 to-success-600',
   'from-warning-500 to-warning-600',
 ]

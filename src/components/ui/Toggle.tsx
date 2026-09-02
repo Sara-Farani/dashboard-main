@@ -19,8 +19,10 @@ export default function Toggle({ checked, onChange, disabled }: ToggleProps) {
       aria-checked={checked}
       disabled={disabled}
       onClick={() => onChange?.(!checked)}
-      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 ${
-        checked ? 'bg-primary-600' : 'bg-surface-300'
+      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mellat-500 ${
+        checked
+          ? 'bg-gradient-to-b from-mellat-400 to-mellat-600 shadow-md shadow-mellat-500/40'
+          : 'bg-surface-300'
       } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       <motion.span
