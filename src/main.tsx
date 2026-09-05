@@ -10,6 +10,9 @@ import '@fontsource/vazirmatn/700.css'
 
 import App from './App'
 import './index.css'
+import { applyTheme, readThemeFromStorage } from './config/theme'
+
+applyTheme(readThemeFromStorage())
 
 const queryClient = new QueryClient({
   defaultOptions: {

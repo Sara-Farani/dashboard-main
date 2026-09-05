@@ -3,11 +3,11 @@ import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
 import {
   Bell,
+  Check,
   CheckCircle2,
   Clock3,
   Globe2,
   MonitorCog,
-  Moon,
   Palette,
   RotateCcw,
   Save,
@@ -22,9 +22,15 @@ import {
   staggerContainer,
   staggerItem,
 } from '../../animations/animationVariants'
+import {
+  applyTheme,
+  readThemeFromStorage,
+  saveThemeToStorage,
+  themeOptions,
+  type ThemeId,
+} from '../../config/theme'
 
 type GeneralSettingsState = {
-  darkMode: boolean
   notifications: boolean
   autoRefresh: boolean
   rtl: boolean
@@ -40,20 +46,12 @@ type SettingItem = {
 const STORAGE_KEY = 'general-settings'
 
 const defaultSettings: GeneralSettingsState = {
-  darkMode: false,
   notifications: true,
   autoRefresh: true,
   rtl: true,
 }
 
 const displaySettings: SettingItem[] = [
-  {
-    key: 'darkMode',
-    label: 'حالت تاریک',
-    description:
-      'استفاده از پوسته تاریک در بخش‌های پشتیبانی‌شده سامانه.',
-    icon: Moon,
-  },
   {
     key: 'notifications',
     label: 'اعلان‌های دسکتاپ',
@@ -99,11 +97,6 @@ const readSettingsFromStorage = (): GeneralSettingsState => {
 const applyVisualSettings = (settings: GeneralSettingsState) => {
   document.documentElement.dir = settings.rtl ? 'rtl' : 'ltr'
   document.documentElement.lang = settings.rtl ? 'fa' : 'en'
-
-  document.documentElement.classList.toggle(
-    'dark',
-    settings.darkMode,
-  )
 }
 
 export default function GeneralSettings() {
@@ -113,6 +106,10 @@ export default function GeneralSettings() {
 
   const [savedSettings, setSavedSettings] =
     useState<GeneralSettingsState>(settings)
+
+  const [selectedTheme, setSelectedTheme] = useState<ThemeId>(
+    readThemeFromStorage,
+  )
 
   useEffect(() => {
     applyVisualSettings(settings)
@@ -132,6 +129,12 @@ export default function GeneralSettings() {
     }))
   }
 
+  const handleThemeChange = (theme: ThemeId) => {
+    setSelectedTheme(theme)
+    applyTheme(theme)
+    saveThemeToStorage(theme)
+  }
+
   const handleSave = () => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(settings))
@@ -147,6 +150,8 @@ export default function GeneralSettings() {
   const handleReset = () => {
     setSettings(defaultSettings)
     localStorage.removeItem(STORAGE_KEY)
+
+    handleThemeChange('mellat')
 
     toast.success('تنظیمات به حالت پیش‌فرض بازگردانده شد.')
   }
@@ -240,12 +245,73 @@ export default function GeneralSettings() {
               </div>
             </div>
 
-            <div className="divide-y divide-surface-100">
-              {displaySettings
-                .filter(
-                  (setting) =>
-                    setting.key === 'darkMode' || setting.key === 'rtl',
+            {/* انتخاب تم */}
+            <div className="flex items-center justify-between gap-4 border-b border-surface-100 px-5 py-4">
+              <div className="flex min-w-0 items-center gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-mellat-50 text-mellat-600">
+                  <Palette className="h-5 w-5" />
+                </div>
+
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-surface-800">
+                    تم رنگی سامانه
+                  </p>
+
+                  <p className="mt-1 text-xs leading-5 text-surface-400">
+                    رنگ‌ها به‌صورت زنده روی تمام صفحات اعمال می‌شوند.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 px-5 py-4 sm:grid-cols-4">
+              {themeOptions.map((option) => {
+                const isSelected = selectedTheme === option.id
+
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => handleThemeChange(option.id)}
+                    aria-pressed={isSelected}
+                    className={`group relative flex flex-col items-center gap-2.5 rounded-2xl border-2 p-4 text-center transition-all duration-200 ${
+                      isSelected
+                        ? 'border-mellat-500 bg-mellat-50/60 shadow-md shadow-mellat-500/20'
+                        : 'border-surface-200 bg-white hover:border-mellat-300 hover:bg-surface-50'
+                    }`}
+                  >
+                    {isSelected && (
+                      <span className="absolute left-2.5 top-2.5 flex h-5 w-5 items-center justify-center rounded-full bg-mellat-500 text-white shadow-sm">
+                        <Check className="h-3 w-3" strokeWidth={3} />
+                      </span>
+                    )}
+
+                    <span
+                      className="flex h-9 w-9 items-center justify-center rounded-full shadow-inner ring-2 ring-white"
+                      style={{ backgroundColor: option.swatch }}
+                    />
+
+                    <span>
+                      <span
+                        className={`block text-xs font-bold ${
+                          isSelected ? 'text-mellat-700' : 'text-surface-700'
+                        }`}
+                      >
+                        {option.label}
+                      </span>
+
+                      <span className="mt-0.5 block text-[11px] leading-4 text-surface-400">
+                        {option.description}
+                      </span>
+                    </span>
+                  </button>
                 )
+              })}
+            </div>
+
+            <div className="divide-y divide-surface-100 border-t border-surface-100">
+              {displaySettings
+                .filter((setting) => setting.key === 'rtl')
                 .map((setting) => {
                   const Icon = setting.icon
 
@@ -255,7 +321,7 @@ export default function GeneralSettings() {
                       className="flex items-center justify-between gap-4 px-5 py-4"
                     >
                       <div className="flex min-w-0 items-center gap-4">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-mellat-50 text-mellat-600">
                           <Icon className="h-5 w-5" />
                         </div>
 
@@ -318,7 +384,7 @@ export default function GeneralSettings() {
                       className="flex items-center justify-between gap-4 px-5 py-4"
                     >
                       <div className="flex min-w-0 items-center gap-4">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-mellat-50 text-mellat-600">
                           <Icon className="h-5 w-5" />
                         </div>
 

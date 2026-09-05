@@ -33,7 +33,7 @@ export default function BranchDepositsChart({ branches }: Props) {
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="name" />
-            <YAxis />
+            <YAxis tick={{dx : -10, "textAnchor" : "start"}}/>
             <Tooltip
               formatter={(value) => [
                 `${Number(value).toLocaleString("fa-IR")} میلیون ریال`,

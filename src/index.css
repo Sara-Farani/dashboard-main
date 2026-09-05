@@ -2,23 +2,64 @@
 @import "./animations/shimmer.css";
 
 /* ---------------------------------------------------------------
+   Firefox compatibility fix
+   Tailwind v4 emits gradient positions like `to bottom in oklab`,
+   which Firefox < 128 rejects — dropping the whole background-image
+   and leaving buttons/menus colorless. Re-declare positions without
+   the `in oklab` interpolation so gradients render everywhere.
+---------------------------------------------------------------- */
+@layer utilities {
+  .bg-gradient-to-b {
+    --tw-gradient-position: to bottom;
+  }
+  .bg-gradient-to-br {
+    --tw-gradient-position: to bottom right;
+  }
+  .bg-gradient-to-l {
+    --tw-gradient-position: to left;
+  }
+  .bg-gradient-to-r {
+    --tw-gradient-position: to right;
+  }
+  .bg-gradient-to-t {
+    --tw-gradient-position: to top;
+  }
+  .bg-linear-to-b {
+    --tw-gradient-position: to bottom;
+  }
+  .bg-linear-to-br {
+    --tw-gradient-position: to bottom right;
+  }
+  .bg-linear-to-l {
+    --tw-gradient-position: to left;
+  }
+  .bg-linear-to-r {
+    --tw-gradient-position: to right;
+  }
+  .bg-linear-to-t {
+    --tw-gradient-position: to top;
+  }
+}
+
+/* ---------------------------------------------------------------
    Tailwind v4 theme tokens
 ---------------------------------------------------------------- */
 @theme {
   --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
   --font-sans-fa: "Vazirmatn", "Segoe UI", Tahoma, sans-serif;
 
-  /* Brand primary — Bank Mellat red */
-  --color-primary-50: #fef2f2;
-  --color-primary-100: #fee2e2;
-  --color-primary-200: #fecaca;
-  --color-primary-300: #fca5a5;
-  --color-primary-400: #f87171;
-  --color-primary-500: #ed1c24;
-  --color-primary-600: #c4141b;
-  --color-primary-700: #9b1016;
-  --color-primary-800: #7f0d12;
-  --color-primary-900: #6b0b0f;
+  /* Brand primary — aliased to the mellat scale so themes
+     only need to override --color-mellat-* */
+  --color-primary-50: var(--color-mellat-50);
+  --color-primary-100: var(--color-mellat-100);
+  --color-primary-200: var(--color-mellat-200);
+  --color-primary-300: var(--color-mellat-300);
+  --color-primary-400: var(--color-mellat-400);
+  --color-primary-500: var(--color-mellat-500);
+  --color-primary-600: var(--color-mellat-600);
+  --color-primary-700: var(--color-mellat-700);
+  --color-primary-800: var(--color-mellat-800);
+  --color-primary-900: var(--color-mellat-900);
 
   --color-surface-50: #f8fafc;
   --color-surface-100: #f1f5f9;
@@ -162,4 +203,54 @@ html[dir="ltr"] body {
 
 .nums-lat {
   font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------
+   Theme system
+   The default theme (mellat) is the tokens defined in @theme above.
+   Alternative themes override the --color-mellat-* scale on
+   <html data-theme="..."> which the --color-primary-* aliases
+   and all mellat utilities pick up automatically.
+---------------------------------------------------------------- */
+
+/* Theme: Royal Blue */
+:root[data-theme='royal'] {
+  --color-mellat-50: #eef4ff;
+  --color-mellat-100: #dfe9ff;
+  --color-mellat-200: #c2d4fe;
+  --color-mellat-300: #9db8fc;
+  --color-mellat-400: #7295f8;
+  --color-mellat-500: #3b6ef0;
+  --color-mellat-600: #2450d6;
+  --color-mellat-700: #1e3fae;
+  --color-mellat-800: #1d378a;
+  --color-mellat-900: #1d316e;
+}
+
+/* Theme: Emerald Green */
+:root[data-theme='emerald'] {
+  --color-mellat-50: #ecfdf5;
+  --color-mellat-100: #d1fae5;
+  --color-mellat-200: #a7f3d0;
+  --color-mellat-300: #6ee7b7;
+  --color-mellat-400: #34d399;
+  --color-mellat-500: #10b981;
+  --color-mellat-600: #059669;
+  --color-mellat-700: #047857;
+  --color-mellat-800: #065f46;
+  --color-mellat-900: #064e3b;
+}
+
+/* Theme: Golden Sand */
+:root[data-theme='golden'] {
+  --color-mellat-50: #fffaeb;
+  --color-mellat-100: #fef0c7;
+  --color-mellat-200: #fedf89;
+  --color-mellat-300: #fec84b;
+  --color-mellat-400: #fdb022;
+  --color-mellat-500: #f79009;
+  --color-mellat-600: #dc6803;
+  --color-mellat-700: #b54708;
+  --color-mellat-800: #93370d;
+  --color-mellat-900: #7a2e0e;
 }
